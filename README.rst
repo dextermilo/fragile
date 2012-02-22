@@ -6,4 +6,5 @@
 6. bin/buildout init
 7. bin/buildout
 8. bin/fragile
-9. Visit http://localhost:6543/stories in browser.
+9. Start up mongo (see command printed by brew)
+10. Visit http://localhost:6543/stories in browser.
