@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xml:lang="en">
+<head>
+  <title>Frisbee</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script src="static/js/socket.io.js"></script>
+  <script src="http://documentcloud.github.com/underscore/underscore.js"></script>
+  <script src="http://documentcloud.github.com/backbone/backbone.js"></script>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div id="header"></div>
+  <div id="sidebar"></div>
+  <div id="content"></div>
+
+  <script>var storydata=$.parseJSON('${storydata}');</script>
+  <script src="static/js/utils.js"></script>
+  <script src="static/js/sync.js"></script>
+  <script src="static/js/models.js"></script>
+  <script src="static/js/header.js"></script>
+  <script src="static/js/story-details.js"></script>
+  <script src="static/js/story-table.js"></script>
+  <script src="static/js/main.js"></script>
+</body>
+</html>
