@@ -1,85 +1,121 @@
 * {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 18px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 13px;
 }
-
+body {
+  color: #999;
+}
 #header {
-    padding-top: 5px;
+  padding-top: 5px;
 }
-
 #sidebar {
-    position: absolute;
-    left: 10px;
-    top: 70px;
-    bottom: 20px;
-    width: 260px;
-    border: solid 1px #CCCCCC;
-    overflow-y: scroll;
+  position: absolute;
+  left: 10px;
+  top: 70px;
+  bottom: 20px;
+  width: 260px;
+  border: solid 1px #CCCCCC;
+  overflow-y: scroll;
 }
-
 #content {
-    position: absolute;
-    top: 70px;
-    bottom: 20px;
-    left: 300px;
-    right: 20px;
+  position: absolute;
+  top: 70px;
+  bottom: 20px;
+  left: 300px;
+  right: 20px;
 }
-
 .form-left-col {
-    width: 310px;
-    float: left;
+  width: 310px;
+  float: left;
 }
-
-.form-right-col {
-}
-
 .title {
-    font-size: 20px;
-    font-weight: bold;
+  font-size: 20px;
+  font-weight: bold;
 }
-
 ul {
-    list-style-type: none;
-    padding-left: 0px;
-    margin-top: 0px;
+  list-style-type: none;
+  padding-left: 0px;
+  margin-top: 0px;
 }
-
 li a {
-    text-decoration: none;
-    display: block;
-    color: #000000;
-    border-bottom: solid 1px #CCCCCC;
-    padding: 8px;
+  text-decoration: none;
+  display: block;
+  color: #000000;
+  border-bottom: solid 1px #CCCCCC;
+  padding: 8px;
 }
-
 li a:hover {
-    background-color: #4B0A1E;
-    color: #BA8A92;
+  background-color: #4B0A1E;
+  color: #BA8A92;
 }
-
 input, textarea {
-    border: 1px solid #ccc;
-    min-height: 30px;
-    outline: none;
+  border: 1px solid #ccc;
+  min-height: 30px;
+  outline: none;
 }
-
 .form-left-col input {
-    margin-bottom: 15px;
-    margin-top: 5px;
-    width: 280px;
+  margin-bottom: 15px;
+  margin-top: 5px;
+  width: 280px;
 }
-
 textarea {
-    margin-bottom: 15px;
-    margin-top: 5px;
-    height: 200px;
-    width: 250px;
+  margin-bottom: 15px;
+  margin-top: 5px;
+  height: 200px;
+  width: 250px;
 }
-
 label {
-    display: block;
+  display: block;
 }
-
 button {
-    padding: 6px;
+  padding: 6px;
+}
+/* Stories */
+.story {
+  position: relative;
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
+  border-top-color: #999;
+  border-top-width: 5px;
+  border-top-style: solid;
+  padding: 5px 130px 5px 130px;
+  margin-bottom: 1em;
+  background: #f8f8f8;
+}
+.story.selected {
+  outline: 1px solid #fff;
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.7);
+  background: #fff;
+}
+.story.state-Accepted {
+  border-top-color: #48B75D;
+}
+.story.state-Progress {
+  border-top-color: #4E6CAD;
+}
+.story-detail {
+  position: absolute;
+  top: 5px;
+  left: 15px;
+  width: 120px;
+}
+.story-summary {
+  color: #2c99ac;
+  font-size: 1.05em;
+  line-height: 1.5em;
+}
+.story-nums {
+  position: absolute;
+  top: 5px;
+  right: 15px;
+  width: 120px;
+  text-align: right;
+}
+.story-points {
+  background-color: #969696;
+  color: #fff;
+  border-radius: 8px;
+  display: inline-block;
+  text-align: center;
+  width: 40px;
+  line-height: 1.8em;
 }

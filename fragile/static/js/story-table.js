@@ -1,6 +1,6 @@
 StoryTableView = Backbone.View.extend({
 
-    tagName:'table',
+    tagName:'div',
 
     initialize:function () {
         this.template = _.template(tpl.get('story-table'));
@@ -22,13 +22,15 @@ StoryTableView = Backbone.View.extend({
 
 StoryRowView = Backbone.View.extend({
 
-    tagName:"tr",
+    tagName:"div",
 
     events: {
-        'click td': 'showDetails'
+        'click div': 'showDetails'
     },
 
     showDetails: function() {
+        $('div.story.selected').removeClass('selected');
+        $(this.el).find('.story').addClass('selected');
         app.showView('#sidebar', new StoryView({model:this.model}));
     },
 

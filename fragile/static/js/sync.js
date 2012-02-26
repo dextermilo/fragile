@@ -1,4 +1,4 @@
-var socket = io.connect("http://10.10.10.131:6543");
+var socket = io.connect(window.location.hostname);
 
 // sync by sending events via socket.io
 

@@ -1,4 +1,9 @@
-<td><%= title %>: <%= summary %></td>
-<td><%= points %></td>
-<td><%= owner %></td>
-<td><%= state %></td>
+<div class="story state-<%= state %>">
+
+	<div class="story-detail"><%= owner %></div>
+	<div class="story-summary"><%= title %></div>
+	<div class="story-nums">
+		<div class="story-points"><%= points %></div>
+	</div>
+
+</div>
