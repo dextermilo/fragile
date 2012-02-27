@@ -14,18 +14,47 @@ var AppRouter = Backbone.Router.extend({
     },
 
     routes:{
-        "":"list",
-        "/stories/:id":"storyDetails"
+        "": "projectList",
+        ":prj": "projectDetails",
+        ":prj/:story": "storyDetails"
     },
 
-    list:function () {
-        this.before();
+    projectList:function () {
+        if (!this.projects) {
+            this.projects = new ProjectCollection();
+            this.projects.reset(projectdata);
+            $('#content').html(new ProjectListView({model:app.projects}).render().el);
+        }
     },
 
-    storyDetails:function (id) {
-        this.before(function () {
-            var model = app.stories.get(id);
-            app.showView('#sidebar', new StoryView({model:model}));
+    projectDetails: function(prj_id, callback) {
+        this.projectList();
+
+        if (this.currentPrj != undefined && this.currentPrj == prj_id) {
+            return;
+        }
+
+        var prj = this.currentPrj = app.projects.get(prj_id);
+        prj.stories = new StoryCollection();
+        prj.stories.context = prj;
+        var prj_view = new ProjectDetailsView({model:prj});
+        this.showView('#content', prj_view);
+        prj.stories.fetch({success:function () {
+            $(prj_view.el).append(new StoryTableView({model:prj.stories}).render().el);
+            if (callback != undefined) {
+                callback();
+            }
+        }});
+    },
+
+    storyDetails:function (prj_id, story_id) {
+        this.projectDetails(prj_id, function() {
+            if (story_id != null) {
+                var story = app.currentPrj.stories.get(story_id);
+            } else {
+                var story = app.currentPrj.stories.create();
+            }
+            $('#sidebar').html(new StoryView({model:story}).render().el);
         });
     },
 
@@ -35,19 +64,11 @@ var AppRouter = Backbone.Router.extend({
         $(selector).html(view.render().el);
         this.currentView = view;
         return view;
-    },
-
-    before:function (callback) {
-        if (!this.stories) {
-            this.stories = new StoryCollection();
-            this.stories.reset(storydata);
-            $('#content').html(new StoryTableView({model:app.stories}).render().el);
-        }
     }
 
 });
 
-tpl.loadTemplates(['header', 'story-details', 'story-table', 'story-row'], function () {
+tpl.loadTemplates(['header', 'project-row', 'project-details', 'story-details', 'story-table', 'story-row'], function () {
     app = new AppRouter();
     Backbone.history.start();
 });

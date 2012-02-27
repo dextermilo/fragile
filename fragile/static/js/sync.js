@@ -1,4 +1,4 @@
-var socket = io.connect(window.location.hostname);
+var socket = io.connect('http://' + location.hostname + ':6543');
 
 // sync by sending events via socket.io
 
@@ -6,10 +6,8 @@ Backbone.sync = function(method, model, options) {
   if (method == 'create') {
     model.attributes.cid = model.cid;
   }
-  if (method != 'read') {
-    console.log('OUT', method, model.attributes);
-    socket.json.emit(method, model.attributes);
-  }
+  console.log('OUT', method, app.currentPrj.id, model.attributes);
+  socket.json.emit(method, app.currentPrj.id, model.attributes);
 
   if (options.success) {
     options.success();
@@ -30,9 +28,17 @@ socket.on('disconnect', function() {
 
 // handle events relayed from other clients
 
+socket.on('reset', function(prj_id, storydata) {
+  console.log('IN', 'reset', prj_id, storydata);
+  var prj = app.projects.get(prj_id);
+  prj.stories.reset($.parseJSON(storydata));
+});
 socket.on('id_assigned', function(cid, id) {
   console.log('IN', 'id_assigned', cid, id);
-  app.stories.getByCid(cid).set('_id', id);
+  var story = app.currentPrj.stories.getByCid(cid)
+  if (story != undefined) {
+    story.set('_id', id);
+  }
 });
 socket.on('create', function(attrs) {
   console.log('IN', 'create', attrs);
@@ -42,18 +48,23 @@ socket.on('create', function(attrs) {
   // where to add the item / what kind rather than
   // just assuming it's a story
   app.before(function() {
-    app.stories.add(new Story(attrs));
+    app.currentPrj.stories.add(new Story(attrs));
   });
 });
 
 socket.on('update', function(attrs) {
   console.log('IN', 'update', attrs);
-  app.stories.get(attrs._id).set(attrs);
+  var story = app.currentPrj.stories.get(attrs._id)
+  if (story != undefined) {
+    story.set(attrs);
+  }
 });
 
 socket.on('delete', function(attrs) {
   console.log('IN', 'delete', attrs);
   // destroy model *without* syncing
-  var model = app.stories.get(attrs._id);
-  model.trigger('destroy', model, model.collection);
+  var story = app.currentPrj.stories.get(attrs._id);
+  if (story != undefined) {
+    story.trigger('destroy', story, story.collection);
+  }
 });

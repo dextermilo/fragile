@@ -16,10 +16,10 @@ def json_handler(obj):
     raise TypeError("%r is not JSON serializable" % obj)
 
 
-@view_config(route_name='stories', renderer='templates/index.pt')
+@view_config(renderer='templates/index.pt')
 def index(request):
-    cursor = pymongo.Connection().fragile.stories.find();
-    return {'storydata': json.dumps(list(cursor), default=json_handler) }
+    cursor = pymongo.Connection().fragile.projects.find();
+    return {'projectdata': json.dumps(list(cursor), default=json_handler) }
 
 
 @view_config(route_name='socket_io')
@@ -36,7 +36,7 @@ def socketio_service(request):
             break
         if msg['type'] == 'event':
             cmd = msg['name']
-            obj = msg['args'][0]
+            prj_id, obj = msg['args']
 
             # Relay to db process via zmq
             # XXX we could PUSH updates/deletes and reserve
@@ -44,14 +44,17 @@ def socketio_service(request):
             socket.send(json.dumps(msg))
             resp = socket.recv()
 
-            # Notify creator of actual id
             if cmd == 'create':
-                _id = resp
-                io.send_event('id_assigned', obj['cid'], _id)
+                # Notify creator of actual id
+                io.send_event('id_assigned', obj['cid'], resp)
+            elif cmd == 'read':
+                # Relay story data
+                io.send_event('reset', prj_id, resp)
 
-            # Broadcast to other socket.io clients
-            print "Broadcasting", msg
-            io.broadcast_event(cmd, obj)
+            if cmd != 'read':
+                # Broadcast to other socket.io clients
+                print "Broadcasting", msg
+                io.broadcast_event(cmd, obj)
 
 
 def relay_to_mongo():
@@ -64,11 +67,13 @@ def relay_to_mongo():
     socket.bind("tcp://127.0.0.1:5555")
 
     # set up mongo connection
-    stories = pymongo.Connection().fragile.stories
+    conn = pymongo.Connection()
+    projects = conn.fragile.projects
+    stories = conn.fragile.stories
 
     while True:
         msg = json.loads(socket.recv())
-        obj = msg['args'][0]
+        prj_id, obj = msg['args']
 
         if msg['name'] == 'create':
             del obj['_id']
@@ -81,6 +86,9 @@ def relay_to_mongo():
         elif msg['name'] == 'delete':
             stories.remove({'_id': bson.objectid.ObjectId(obj['_id'])})
             socket.send('OK')
+        elif msg['name'] == 'read':
+            prj_stories = stories.find({'_id': {'$in': projects.find({'_id': prj_id})[0]['stories']}})
+            socket.send(json.dumps(list(prj_stories), default=json_handler))
         else:
             socket.send('OK')
 

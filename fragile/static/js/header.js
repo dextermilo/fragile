@@ -14,8 +14,7 @@ window.HeaderView = Backbone.View.extend({
     },
 
     newStory:function (event) {
-        var story = app.stories.create();
-        app.showView('#sidebar', new StoryView({model:story}));  
+        app.navigate(app.currentPrj.url() + '/new', {trigger: true});
         return false;
     }
 

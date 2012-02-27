@@ -31,7 +31,7 @@ StoryRowView = Backbone.View.extend({
     showDetails: function() {
         $('div.story.selected').removeClass('selected');
         $(this.el).find('.story').addClass('selected');
-        app.showView('#sidebar', new StoryView({model:this.model}));
+        app.navigate(this.model.url(), {trigger: true});
     },
 
     initialize:function () {
