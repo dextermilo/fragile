@@ -9,10 +9,6 @@ Backbone.View.prototype.close = function () {
 
 var AppRouter = Backbone.Router.extend({
 
-    initialize:function () {
-        $('#header').html(new HeaderView().render().el);
-    },
-
     routes:{
         "": "projectList",
         ":prj": "projectDetails",
@@ -31,7 +27,9 @@ var AppRouter = Backbone.Router.extend({
         this.projectList();
 
         if (this.currentPrj != undefined && this.currentPrj == prj_id) {
-            return;
+            if (callback != undefined) {
+                callback();
+            }
         }
 
         var prj = this.currentPrj = app.projects.get(prj_id);
@@ -49,10 +47,10 @@ var AppRouter = Backbone.Router.extend({
 
     storyDetails:function (prj_id, story_id) {
         this.projectDetails(prj_id, function() {
-            if (story_id != null) {
-                var story = app.currentPrj.stories.get(story_id);
-            } else {
+            if (story_id == 'new') {
                 var story = app.currentPrj.stories.create();
+            } else {
+                var story = app.currentPrj.stories.get(story_id);
             }
             $('#sidebar').html(new StoryView({model:story}).render().el);
         });
@@ -68,7 +66,7 @@ var AppRouter = Backbone.Router.extend({
 
 });
 
-tpl.loadTemplates(['header', 'project-row', 'project-details', 'story-details', 'story-table', 'story-row'], function () {
+tpl.loadTemplates(['project-row', 'project-details', 'story-details', 'story-table', 'story-row'], function () {
     app = new AppRouter();
     Backbone.history.start();
 });

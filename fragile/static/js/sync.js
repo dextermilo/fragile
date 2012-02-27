@@ -6,10 +6,15 @@ Backbone.sync = function(method, model, options) {
   if (method == 'create') {
     model.attributes.cid = model.cid;
   }
+
+  if (method == 'read') {
+    model.reset_callback = options.success;
+  }
+
   console.log('OUT', method, app.currentPrj.id, model.attributes);
   socket.json.emit(method, app.currentPrj.id, model.attributes);
 
-  if (options.success) {
+  if (method != 'read' && options.success) {
     options.success();
   }
 }
@@ -31,7 +36,10 @@ socket.on('disconnect', function() {
 socket.on('reset', function(prj_id, storydata) {
   console.log('IN', 'reset', prj_id, storydata);
   var prj = app.projects.get(prj_id);
-  prj.stories.reset($.parseJSON(storydata));
+  if (prj.stories.reset_callback != undefined) {
+    prj.stories.reset_callback($.parseJSON(storydata));
+    delete prj.stories.reset_callback;
+  }
 });
 socket.on('id_assigned', function(cid, id) {
   console.log('IN', 'id_assigned', cid, id);

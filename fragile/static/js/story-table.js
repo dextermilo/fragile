@@ -17,7 +17,17 @@ StoryTableView = Backbone.View.extend({
             $(this.el).append(new StoryRowView({model:model}).render().el);
         }, this);
         return this;
+    },
+
+    events: {
+        "click .new": "newStory"
+    },
+
+    newStory: function() {
+        app.navigate(this.model.url() + '/new', {trigger: true});
+        return false;
     }
+
 });
 
 StoryRowView = Backbone.View.extend({

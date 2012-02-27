@@ -21,7 +21,6 @@
   <script src="static/js/utils.js"></script>
   <script src="static/js/sync.js"></script>
   <script src="static/js/models.js"></script>
-  <script src="static/js/header.js"></script>
   <script src="static/js/project-details.js"></script>
   <script src="static/js/project-list.js"></script>
   <script src="static/js/story-details.js"></script>
