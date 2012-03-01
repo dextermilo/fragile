@@ -7,18 +7,61 @@ StoryTableView = Backbone.View.extend({
         this.model.bind("reset", this.render, this);
         var self = this;
         this.model.bind("add", function (model) {
-            $(self.el).append(new StoryRowView({model:model}).render().el);
+            $(self.el).find('.stories').append(new StoryRowView({model:model}).render().el);
         });
     },
 
     render:function (eventName) {
         $(this.el).html(this.template(this.model.toJSON()));
         _.each(this.model.models, function (model) {
-            $(this.el).append(new StoryRowView({model:model}).render().el);
+            $(this.el).find('.stories').append(new StoryRowView({model:model}).render().el);
         }, this);
         return this;
     }
 });
+
+StateSelectorView = Backbone.View.extend({
+
+    tagName: "div",
+
+    attributes: {
+        "class": "sel-states dropdown"
+    },
+
+    events: {
+        /*'click .story-active-state': 'toggleMenu',*/
+        'click .sel-state': 'selectState',
+        'click .sel-blocked a': 'selectBlock'
+    },
+
+    states: {},
+
+    initialize:function () {
+        this.template = _.template(tpl.get('story-state'));
+        this.states = app.states;
+    },
+
+    selectState: function(event) {
+        this.model.set('state', $(event.target).attr('data-state'));
+        $(this.el).removeClass('selected');
+        this.model.save();
+    },
+
+    selectBlock: function(event) {
+        if(this.model.get('blocked')) {
+            this.model.set('blocked', false);
+        } else {
+            this.model.set('blocked', true);
+        }
+        this.model.save();
+    },
+
+    render: function (eventName) {
+        $(this.el).html(this.template(_.extend({ states: this.states }, this.model.toJSON())));
+        $(this.el).find('.dropdown-toggle').dropdown();
+        return this;
+    }
+})
 
 StoryRowView = Backbone.View.extend({
 
@@ -42,6 +85,7 @@ StoryRowView = Backbone.View.extend({
 
     render:function (eventName) {
         $(this.el).html(this.template(this.model.toJSON()));
+        $(this.el).find('.story-state').html(new StateSelectorView({model: this.model}).render().el);
         return this;
     }
 

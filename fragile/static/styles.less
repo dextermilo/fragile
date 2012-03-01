@@ -1,5 +1,16 @@
 @grey: #999;
+@darkGrey:                  #333;
 @blue: #2C99AC;
+@lightGrey:                 #d8d8d8;
+
+@ideaColor:                 #ccc;
+@definedColor:              #666;
+@progressColor:             #4E6CAD;
+@scopeColor:            #9B407E;
+@completedColor:            #BF911A;
+@acceptedColor:             #58A44B;
+
+@blockedColor:              #990000;
 
 
 * {
@@ -15,26 +26,23 @@ body {
 }
 
 #sidebar {
-    position: absolute;
-    left: 10px;
-    top: 70px;
-    bottom: 20px;
-    width: 260px;
-    border: solid 1px #CCCCCC;
-    overflow-y: scroll;
+    width: 300px;
+    background: white;
+    box-shadow: 0px 0px 6px rgba(0,0,0,0.5);
+    
+    float: right;
 }
 
 #content {
-    position: absolute;
-    top: 70px;
-    bottom: 20px;
-    left: 300px;
-    right: 20px;
+    margin-right: 320px;
+}
+
+.content {
+    padding: 1em;
 }
 
 .form-left-col {
-    width: 310px;
-    float: left;
+
 }
 
 .form-right-col {
@@ -49,19 +57,6 @@ ul {
     list-style-type: none;
     padding-left: 0px;
     margin-top: 0px;
-}
-
-li a {
-    text-decoration: none;
-    display: block;
-    color: #000000;
-    border-bottom: solid 1px #CCCCCC;
-    padding: 8px;
-}
-
-li a:hover {
-    background-color: #4B0A1E;
-    color: #BA8A92;
 }
 
 input, textarea {
@@ -93,33 +88,142 @@ button {
 
 /* Stories */
 
+.stories {
+    padding-left: 50px;
+}
+
 .story {
     position: relative;
     box-shadow: 0px 0px 3px rgba(0,0,0,0.5);
     border-top-color: #999;
-    border-top-width: 5px;
+    border-top-width: 6px;
     border-top-style: solid;
-    padding: 5px 130px 5px 130px;
+    padding: 5px 130px 10px 130px;
     margin-bottom: 1em;
     background: #f8f8f8;
 }
 
 .story.selected {
-    outline: 1px solid #fff;
-    box-shadow: 0px 0px 6px rgba(0,0,0, 0.7);
+ 
     background: #fff;
 }
-.story.state-Accepted {
-    border-top-color: #48B75D;
+.story.state-idea {
+    border-top-color: @ideaColor;
 }
-.story.state-Progress {
-    border-top-color: #4E6CAD;
+.story.state-defined {
+    border-top-color: @definedColor;
+}
+.story.state-accepted {
+    border-top-color: @acceptedColor;
+}
+.story.state-completed {
+    border-top-color: @completedColor;
+}
+.story.state-scope {
+    border-top-color: @scopeColor;
+}
+.story.state-progress {
+    border-top-color: @progressColor;
+}
+.story.state-blocked {
+    border-top-color: @blockedColor;
+}
+.sel-states {
+    position: absolute;
+    top: -12px;
+    left: 0;
+    font-size: 11px;
+}
+
+.story-active-state {
+    padding: 0.3em 0.8em 0.4em 8px;
+
+    border-radius: 4px;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+    color: white;
+    font-size: 11px;
+}
+.story-active-state:hover {
+    color: white;
+}
+
+.sel-states .dropdown-menu {
+    border-radius: 4px;
+    width: 100px;
+}
+.sel-states.open .dropdown-menu {
+    
+}
+.sel-states.open .dropdown-menu a {
+    padding:2px 8px;
+}
+.sel-state-color {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    line-height: 12px;
+    text-align: center;
+    color: white;
+    font-size: 11px;
+}
+.sel-states,
+.sel-states.open,
+.sel-states:hover {
+    a.sel-idea {
+        background-color: @ideaColor;
+    }
+    a.sel-defined {
+        background-color: @definedColor;
+    }
+    a.sel-progress {
+        background-color: @progressColor;
+    }
+    a.sel-completed {
+        background-color: @completedColor;
+    }
+    a.sel-scope {
+        background-color: @scopeColor;
+    }
+    a.sel-accepted {
+        background-color: @acceptedColor;
+    }
+    a.sel-blocked {
+        background-color: @blockedColor;
+    }
+}
+.story-active-state .sel-state-color {
+    width: 12px;
+    height: 12px;
+    display: none;
+}
+.sel-idea .sel-state-color {
+    background-color: @ideaColor;
+}
+.sel-defined .sel-state-color {
+    background-color: @definedColor;
+}
+.sel-progress .sel-state-color {
+    background-color: @progressColor;
+}
+.sel-completed .sel-state-color {
+    background-color: @completedColor;
+}
+.sel-scope .sel-state-color {
+    background-color: @scopeColor;
+}
+.sel-accepted .sel-state-color {
+    background-color: @acceptedColor;
+}
+.sel-blocked .sel-state-color {
+    background-color: @blockedColor;
 }
 
 .story-detail {
     position: absolute;
-    top: 5px;
-    left: 15px;
+    top: 0;
+    left: 0;
+    padding: 5px 0 0 15px; 
     width: 120px
 }
 
@@ -132,12 +236,12 @@ button {
 .story-nums {
     position: absolute;
     top: 5px;
-    right: 15px;
+    right: 10px;
     width: 120px;
     text-align: right;
 }
 .story-points {
-    background-color: #969696;
+    background-color: #A7A7A7;
     color: #fff;
     border-radius: 8px;
     display: inline-block;

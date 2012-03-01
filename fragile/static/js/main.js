@@ -18,6 +18,15 @@ var AppRouter = Backbone.Router.extend({
         "/stories/:id":"storyDetails"
     },
 
+    states: {
+        "idea": "Discovery",
+        "defined": "Estimated",
+        "scope": "In Scope",
+        "progress": "Implementing",
+        "completed": "Reviewing",
+        "accepted": "Approved"
+    },
+
     list:function () {
         this.before();
     },
@@ -47,7 +56,7 @@ var AppRouter = Backbone.Router.extend({
 
 });
 
-tpl.loadTemplates(['header', 'story-details', 'story-table', 'story-row'], function () {
+tpl.loadTemplates(['header', 'story-details', 'story-table', 'story-row', 'story-state'], function () {
     app = new AppRouter();
     Backbone.history.start();
 });
