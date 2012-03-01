@@ -8,6 +8,7 @@ from multiprocessing import Process
 
 
 context = zmq.Context()
+mongo = pymongo.Connection()
 
 
 def json_handler(obj):
@@ -18,8 +19,11 @@ def json_handler(obj):
 
 @view_config(route_name='stories', renderer='templates/index.pt')
 def index(request):
-    cursor = pymongo.Connection().fragile.stories.find();
-    return {'storydata': json.dumps(list(cursor), default=json_handler) }
+    try:
+        cursor = mongo.fragile.stories.find();
+        return {'storydata': json.dumps(list(cursor), default=json_handler) }
+    finally:
+        mongo.end_request()
 
 
 @view_config(route_name='socket_io')
