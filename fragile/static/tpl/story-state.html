@@ -1,0 +1,20 @@
+<a href="#" class="dropdown-toggle story-active-state <% print('sel-' + (blocked == true ? 'blocked' : state)) %>" data-toggle="dropdown">
+	<span class="sel-state-color"></span>
+	<%= states[state] %>
+</a>
+
+<ul class="dropdown-menu">
+	<% _.each(states, function(label, value) { %>
+		<li class="sel-<%= value %>">
+			<a class="sel-state" data-state="<%= value %>" href="#">
+				<span class="sel-state-color"><% if(value == state) print('&bull;') %></span>
+				<%= label %>
+			</a>
+		</li>
+
+	<% }); %>
+	<li class="divider"> </li>
+	<li class="sel-blocked">
+		<a href="#"> <span class="sel-state-color"><% if(blocked == true) print('&bull;') %></span> Blocked </a>
+	</li>
+</ul>
