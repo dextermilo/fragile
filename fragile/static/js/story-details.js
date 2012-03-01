@@ -1,17 +1,20 @@
 StoryView = Backbone.View.extend({
 
+    states: {},
+
     initialize: function () {
         this.template = _.template(tpl.get('story-details'));
         this.model.bind("change", this.render, this);
+        this.states = app.states;
     },
 
     render: function (eventName) {
-        $(this.el).html(this.template(this.model.toJSON()));
+        $(this.el).html(this.template(_.extend({ states: this.states }, this.model.toJSON())));
         return this;
     },
 
     events:{
-        "change input": "change",
+        "change input,select": "change",
         "click .delete": "delete"
     },
 

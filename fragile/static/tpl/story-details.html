@@ -1,4 +1,4 @@
-<div class="form-left-col">
+<div class="content form">
     <label>Id:</label>
     <input name="_id" type="text" value="<%= _id %>" disabled />
 
@@ -12,7 +12,13 @@
     <input type="text" name="owner" value="<%= owner %>"/>
 
     <label>State:</label>
-    <input type="text" name="state" value="<%= state %>"/>
+    <select name="state">
+        <% _.each(states, function(label, value) { %>
+
+            <option value="<%= value %>" <% if (state == value) { print('selected=selected'); } %>> <%= label %> </option>
+
+        <% }); %>
+    </select>
 
     <label>Points:</label>
     <input type="text" name="points" value="<%= points %>" />

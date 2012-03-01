@@ -15,6 +15,15 @@ var AppRouter = Backbone.Router.extend({
         ":prj/:story": "storyDetails"
     },
 
+    states: {
+        "idea": "Discovery",
+        "defined": "Estimated",
+        "scope": "In Scope",
+        "progress": "Implementing",
+        "completed": "Reviewing",
+        "accepted": "Approved"
+    },
+
     projectList:function () {
         if (!this.projects) {
             this.projects = new ProjectCollection();
@@ -43,6 +52,7 @@ var AppRouter = Backbone.Router.extend({
                 callback();
             }
         }});
+
     },
 
     storyDetails:function (prj_id, story_id) {
@@ -66,7 +76,7 @@ var AppRouter = Backbone.Router.extend({
 
 });
 
-tpl.loadTemplates(['project-row', 'project-details', 'story-details', 'story-table', 'story-row'], function () {
+tpl.loadTemplates(['project-row', 'project-details', 'story-details', 'story-table', 'story-row', 'story-state'], function () {
     app = new AppRouter();
     Backbone.history.start();
 });

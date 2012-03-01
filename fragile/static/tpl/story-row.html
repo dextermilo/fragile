@@ -1,6 +1,9 @@
-<div class="story state-<%= state %>">
+<div class="story state-<% print(blocked == true ? 'blocked' : state) %>">
 
-	<div class="story-detail"><%= owner %></div>
+	<div class="story-detail">
+		<span class="story-state"></span>
+		<span class="story-owner"><%= owner %></span>
+	</div>
 	<div class="story-summary"><%= title %></div>
 	<div class="story-nums">
 		<div class="story-points"><%= points %></div>
