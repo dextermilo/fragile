@@ -21,7 +21,7 @@ def json_handler(obj):
 def index(request):
     try:
         cursor = mongo.fragile.stories.find();
-        return {'storydata': json.dumps(list(cursor), default=json_handler) }
+        return {'storydata': json.dumps(list(cursor), default=json_handler).replace("'", r"\'") }
     finally:
         mongo.end_request()
 
