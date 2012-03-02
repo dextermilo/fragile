@@ -20,11 +20,12 @@
     <div id="content"></div>
   </div>
 
-  <script>var storydata=$.parseJSON('${storydata}');</script>
+  <script>var projectdata=$.parseJSON('${projectdata}');</script>
   <script src="static/js/utils.js"></script>
   <script src="static/js/sync.js"></script>
   <script src="static/js/models.js"></script>
-  <script src="static/js/header.js"></script>
+  <script src="static/js/project-details.js"></script>
+  <script src="static/js/project-list.js"></script>
   <script src="static/js/story-details.js"></script>
   <script src="static/js/story-table.js"></script>
   <script src="static/js/main.js"></script>

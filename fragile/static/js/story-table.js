@@ -17,7 +17,17 @@ StoryTableView = Backbone.View.extend({
             $(this.el).find('.stories').append(new StoryRowView({model:model}).render().el);
         }, this);
         return this;
+    },
+
+    events: {
+        "click .new": "newStory"
+    },
+
+    newStory: function() {
+        app.navigate(this.model.url() + '/new', {trigger: true});
+        return false;
     }
+
 });
 
 StateSelectorView = Backbone.View.extend({
@@ -74,7 +84,7 @@ StoryRowView = Backbone.View.extend({
     showDetails: function() {
         $('div.story.selected').removeClass('selected');
         $(this.el).find('.story').addClass('selected');
-        app.showView('#sidebar', new StoryView({model:this.model}));
+        app.navigate(this.model.url(), {trigger: true});
     },
 
     initialize:function () {
