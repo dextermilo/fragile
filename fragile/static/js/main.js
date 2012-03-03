@@ -79,7 +79,8 @@ var AppRouter = Backbone.Router.extend({
 
 });
 
-tpl.loadTemplates(['project-row', 'project-details', 'story-details', 'story-table', 'story-row', 'story-state'], function () {
+
+tpl.loadTemplates(['header', 'story-details', 'story-table', 'story-row', 'story-state', 'story-quick-add'], function () {
     app = new AppRouter();
     Backbone.history.start();
 });

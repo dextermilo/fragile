@@ -28,6 +28,7 @@
   <script src="static/js/project-list.js"></script>
   <script src="static/js/story-details.js"></script>
   <script src="static/js/story-table.js"></script>
+  <script src="static/js/story-quick-add.js"></script>
   <script src="static/js/main.js"></script>
 </body>
 </html>
