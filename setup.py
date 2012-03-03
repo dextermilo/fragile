@@ -38,5 +38,6 @@ setup(name='fragile',
       test_suite="fragile",
       entry_points = {'console_scripts': [
           'fragile = fragile:main',
+          'fragile-persist = fragile.views:relay_to_mongo',
           ]},
       )

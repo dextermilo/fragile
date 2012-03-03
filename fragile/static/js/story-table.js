@@ -16,6 +16,14 @@ StoryTableView = Backbone.View.extend({
         _.each(this.model.models, function (model) {
             $(this.el).find('.stories').append(new StoryRowView({model:model}).render().el);
         }, this);
+        $('.stories', this.el).sortable({
+            axis: 'y',
+            update: function(event, ui) {
+                var attrs = ui.item[0].model.attributes;
+                attrs.position = ui.item.index();
+                socket.json.emit('reorder', app.currentPrj.id, attrs);
+            }
+        });
         return this;
     },
 
@@ -96,6 +104,7 @@ StoryRowView = Backbone.View.extend({
     render:function (eventName) {
         $(this.el).html(this.template(this.model.toJSON()));
         $(this.el).find('.story-state').html(new StateSelectorView({model: this.model}).render().el);
+        this.el.model = this.model;
         return this;
     }
 

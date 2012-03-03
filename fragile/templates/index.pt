@@ -9,6 +9,7 @@
   <script src="http://documentcloud.github.com/underscore/underscore.js"></script>
   <script src="http://documentcloud.github.com/backbone/backbone.js"></script>
   <script src="static/js/bootstrap/bootstrap-dropdown.js"></script>
+  <script src="static/js/jquery-ui-1.8.18.custom.min.js"></script>
   <link rel="stylesheet" href="/static/bootstrap.css" />
   <link rel="stylesheet" href="/static/bootstrap-responsive.min.css" />
   <link rel="stylesheet" href="/static/styles.css" />

@@ -78,7 +78,7 @@ def relay_to_mongo():
     # DB upgrade: add 'fragile' project if missing
     if not len(list(projects.find())):
         stories.update({}, {'$set': {'project': 'fragile'}})
-        story_ids = [s['_id'] for s in stories.find({})]
+        story_ids = [s['_id'] for s in stories.find({'project': 'fragile'})]
         projects.insert({'_id': 'fragile', 'title': 'Fragile', 'stories': story_ids})
 
     while True:
@@ -92,16 +92,26 @@ def relay_to_mongo():
             socket.send(str(_id))
         elif msg['name'] == 'update':
             obj['_id'] = bson.objectid.ObjectId(obj['_id'])
-            stories.save(msg['args'][0])
+            stories.save(obj)
             socket.send('OK')
         elif msg['name'] == 'delete':
-            stories.remove({'_id': bson.objectid.ObjectId(obj['_id'])})
-            projects.update({'_id': obj['project']}, {'$pull': {'stories': _id}})
+            story_id = bson.objectid.ObjectId(obj['_id'])
+            stories.remove({'_id': story_id})
+            projects.update({'_id': obj['project']}, {'$pull': {'stories': story_id}})
             socket.send('OK')
         elif msg['name'] == 'read':
             prj_stories = stories.find({'project': prj_id})
             socket.send(json.dumps(list(prj_stories), default=json_handler))
+        elif msg['name'] == 'reorder':
+            prj_stories = projects.find_one({'_id': obj['project']}, {'stories': 1})['stories']
+            story_id = bson.objectid.ObjectId(obj['_id'])
+            index = prj_stories.index(story_id)
+            prj_stories.pop(index)
+            new_index = obj['position']
+            prj_stories.insert(new_index, story_id)
+            projects.update({'_id': obj['project']}, {'$set': {'stories': prj_stories}})
+            socket.send('OK')
         else:
             socket.send('OK')
 
-Process(target=relay_to_mongo).start()
+#Process(target=relay_to_mongo).start()
