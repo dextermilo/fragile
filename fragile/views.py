@@ -75,6 +75,12 @@ def relay_to_mongo():
     projects = conn.fragile.projects
     stories = conn.fragile.stories
 
+    # DB upgrade: add 'fragile' project if missing
+    if not len(list(projects.find())):
+        stories.update({}, {'$set': {'project': 'fragile'}})
+        story_ids = [s['_id'] for s in stories.find({})]
+        projects.insert({'_id': 'fragile', 'title': 'Fragile', 'stories': story_ids})
+
     while True:
         msg = json.loads(socket.recv())
         prj_id, obj = msg['args']
@@ -82,6 +88,7 @@ def relay_to_mongo():
         if msg['name'] == 'create':
             del obj['_id']
             _id = stories.insert(obj)
+            projects.update({'_id': obj['project']}, {'$push': {'stories': _id}})
             socket.send(str(_id))
         elif msg['name'] == 'update':
             obj['_id'] = bson.objectid.ObjectId(obj['_id'])
@@ -89,6 +96,7 @@ def relay_to_mongo():
             socket.send('OK')
         elif msg['name'] == 'delete':
             stories.remove({'_id': bson.objectid.ObjectId(obj['_id'])})
+            projects.update({'_id': obj['project']}, {'$pull': {'stories': _id}})
             socket.send('OK')
         elif msg['name'] == 'read':
             prj_stories = stories.find({'project': prj_id})

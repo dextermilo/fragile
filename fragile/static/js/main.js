@@ -59,7 +59,7 @@ var AppRouter = Backbone.Router.extend({
     storyDetails:function (prj_id, story_id) {
         this.projectDetails(prj_id, function() {
             if (story_id == 'new') {
-                var story = app.currentPrj.stories.create();
+                var story = app.currentPrj.stories.create({project: app.currentPrj.id});
             } else {
                 var story = app.currentPrj.stories.get(story_id);
             }
