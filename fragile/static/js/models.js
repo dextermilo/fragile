@@ -40,5 +40,8 @@ StoryCollection = Backbone.Collection.extend({
     model: Story,
     url: function() {
         return this.context.url();
+    },
+    comparator: function(story) {
+        return _.indexOf(this.context.get('stories'), story.id);
     }
 });

@@ -91,7 +91,7 @@ def relay_to_mongo():
             stories.remove({'_id': bson.objectid.ObjectId(obj['_id'])})
             socket.send('OK')
         elif msg['name'] == 'read':
-            prj_stories = stories.find({'_id': {'$in': projects.find({'_id': prj_id})[0]['stories']}})
+            prj_stories = stories.find({'project': prj_id})
             socket.send(json.dumps(list(prj_stories), default=json_handler))
         else:
             socket.send('OK')
