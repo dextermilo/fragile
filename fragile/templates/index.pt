@@ -14,7 +14,23 @@
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
-  <div id="header"></div>
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="brand" href="#">
+          Fragile
+        </a>
+          <div class="nav-collapse">
+              <ul class="nav">
+                <li class="active"><a href="#">Projects</a></li>
+                <li><a href="#">Sprint</a></li>
+                <li><a href="#">Performance</a></li>
+              </ul>
+          </div>
+      </div>
+    </div>
+  </div>
+
   <div id="wrapper">
     <div id="sidebar"></div>
     <div id="content"></div>

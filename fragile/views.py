@@ -20,7 +20,7 @@ def json_handler(obj):
 @view_config(renderer='templates/index.pt')
 def index(request):
     try:
-        cursor = mongo.fragile.stories.find();
+        cursor = mongo.fragile.projects.find();
         return {'projectdata': json.dumps(list(cursor), default=json_handler).replace("'", r"\'") }
     finally:
         mongo.end_request()
