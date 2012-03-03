@@ -18,6 +18,7 @@ StoryQuickAddView = Backbone.View.extend({
         }
         var flyer = new StoryFlyView({model: new_story});
         var start_pos = $(this.el).find('.btn').position();
+        $(this.el).find('.add-story-quick-input').val('');
         flyer.fly_in($('div.stories'), start_pos.top, start_pos.left + 100, $('div.stories').height(), 0);
         return false;
     },

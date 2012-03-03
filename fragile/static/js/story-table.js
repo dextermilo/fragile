@@ -7,7 +7,10 @@ StoryTableView = Backbone.View.extend({
         this.model.bind("reset", this.render, this);
         var self = this;
         this.model.bind("add", function (model) {
-            $(self.el).find('.stories').append(new StoryRowView({model:model}).render().el);
+            var row = $(new StoryRowView({model:model}).render().el);
+            row.hide();
+            $(self.el).find('.stories').append(row);
+            row.fadeIn(1000);
         });
     },
 
