@@ -35,9 +35,10 @@ var AppRouter = Backbone.Router.extend({
     projectDetails: function(prj_id, callback) {
         this.projectList();
 
-        if (this.currentPrj != undefined && this.currentPrj == prj_id) {
+        if (this.currentPrj != undefined && this.currentPrj.id == prj_id) {
             if (callback != undefined) {
                 callback();
+                return;
             }
         }
 
