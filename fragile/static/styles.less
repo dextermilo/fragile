@@ -104,8 +104,13 @@ button {
 }
 
 .story.selected {
- 
     background: #fff;
+    margin: -5px -10px 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    font-size: 130%;
+    z-index: 2;
+    -moz-transition-property: background, margin, font-size, box-shadow;
+    -moz-transition-duration: 0.3s;
 }
 .story.state-idea {
     border-top-color: @ideaColor;
