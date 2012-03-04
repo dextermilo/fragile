@@ -74,6 +74,7 @@ def relay_to_mongo():
     conn = pymongo.Connection()
     projects = conn.fragile.projects
     stories = conn.fragile.stories
+    counters = conn.fragile.counters
 
     # DB upgrade: add 'fragile' project if missing
     if not len(list(projects.find())):
@@ -81,21 +82,29 @@ def relay_to_mongo():
         story_ids = [s['_id'] for s in stories.find({'project': 'fragile'})]
         projects.insert({'_id': 'fragile', 'title': 'Fragile', 'stories': story_ids})
 
+    # DB upgrade: add incrementing counter for stories
+    if not len(list(counters.find())):
+        counters.insert({'_id': 'story', 'value': 0})
+
     while True:
         msg = json.loads(socket.recv())
         prj_id, obj = msg['args']
 
         if msg['name'] == 'create':
-            del obj['_id']
-            _id = stories.insert(obj)
-            projects.update({'_id': obj['project']}, {'$push': {'stories': _id}})
-            socket.send(str(_id))
+            counter = counters.find_and_modify(query={'_id': 'story'}, update={'$inc': {'value': 1}}, new=True)
+            obj['_id'] = next_id = 'S%s' % counter['value']
+            stories.insert(obj)
+            projects.update({'_id': obj['project']}, {'$push': {'stories': next_id}})
+            socket.send(next_id)
         elif msg['name'] == 'update':
-            obj['_id'] = bson.objectid.ObjectId(obj['_id'])
+            if not obj['_id'].startswith('S'):
+                obj['_id'] = bson.objectid.ObjectId(obj['_id'])
             stories.save(obj)
             socket.send('OK')
         elif msg['name'] == 'delete':
-            story_id = bson.objectid.ObjectId(obj['_id'])
+            import pdb; pdb.set_trace()
+            if not obj['_id'].startswith('S'):
+                story_id = bson.objectid.ObjectId(obj['_id'])
             stories.remove({'_id': story_id})
             projects.update({'_id': obj['project']}, {'$pull': {'stories': story_id}})
             socket.send('OK')
@@ -104,7 +113,8 @@ def relay_to_mongo():
             socket.send(json.dumps(list(prj_stories), default=json_handler))
         elif msg['name'] == 'reorder':
             prj_stories = projects.find_one({'_id': obj['project']}, {'stories': 1})['stories']
-            story_id = bson.objectid.ObjectId(obj['_id'])
+            if not obj['_id'].startswith('S'):
+                story_id = bson.objectid.ObjectId(obj['_id'])
             index = prj_stories.index(story_id)
             prj_stories.pop(index)
             new_index = obj['position']
