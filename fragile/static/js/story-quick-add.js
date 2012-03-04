@@ -10,11 +10,12 @@ StoryQuickAddView = Backbone.View.extend({
     },
 
     add_story: function (event) {
-        var new_story = app.stories.create({
+        var new_story = app.currentPrj.stories.create({
+            project: app.currentPrj.id,
             title: $(this.el).find('.add-story-quick-input').val()
         });
         if($('.story-quick-add-details:checked').length > 0) {
-            app.showView('#sidebar', new StoryView({model:new_story}));
+            $('#sidebar').html(new StoryView({model:new_story}).render().el);
         }
         var flyer = new StoryFlyView({model: new_story});
         var start_pos = $(this.el).find('.btn').position();

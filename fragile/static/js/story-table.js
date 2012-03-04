@@ -29,15 +29,6 @@ StoryTableView = Backbone.View.extend({
             }
         });
         return this;
-    },
-
-    events: {
-        "click .new": "newStory"
-    },
-
-    newStory: function() {
-        app.navigate(this.model.url() + '/new', {trigger: true});
-        return false;
     }
 
 });
