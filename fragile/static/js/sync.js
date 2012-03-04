@@ -1,4 +1,8 @@
-var socket = io.connect('http://' + location.hostname + ':6543');
+var endpoint = location.protocol + '//' + location.hostname;
+if (location.port) {
+  endpoint = endpoint + ':' + location.port;
+}
+var socket = io.connect(endpoint);
 
 // sync by sending events via socket.io
 
