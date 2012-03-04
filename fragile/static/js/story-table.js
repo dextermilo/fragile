@@ -7,12 +7,16 @@ StoryTableView = Backbone.View.extend({
         this.model.bind("reset", this.render, this);
         var self = this;
         this.model.bind("add", function (model) {
-            $(self.el).find('.stories').append(new StoryRowView({model:model}).render().el);
+            var row = $(new StoryRowView({model:model}).render().el);
+            row.hide();
+            $(self.el).find('.stories').append(row);
+            row.fadeIn(1000);
         });
     },
 
     render:function (eventName) {
         $(this.el).html(this.template(this.model.toJSON()));
+        $(this.el).find('.quick-add-placeholder').replaceWith(new StoryQuickAddView().render().el);
         _.each(this.model.models, function (model) {
             $(this.el).find('.stories').append(new StoryRowView({model:model}).render().el);
         }, this);
@@ -47,7 +51,6 @@ StateSelectorView = Backbone.View.extend({
     },
 
     events: {
-        /*'click .story-active-state': 'toggleMenu',*/
         'click .sel-state': 'selectState',
         'click .sel-blocked a': 'selectBlock'
     },
@@ -63,6 +66,7 @@ StateSelectorView = Backbone.View.extend({
         this.model.set('state', $(event.target).attr('data-state'));
         $(this.el).removeClass('selected');
         this.model.save();
+        return false;
     },
 
     selectBlock: function(event) {

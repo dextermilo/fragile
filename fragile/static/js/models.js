@@ -26,7 +26,7 @@ Story = Backbone.Model.extend({
         "summary": "",
         "details": "",
         "owner": "",
-        "state": "",
+        "state": "idea",
         "blocked": "",
         "iteration": "",
         "points": "",
