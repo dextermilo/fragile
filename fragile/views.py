@@ -113,8 +113,9 @@ def relay_to_mongo():
             socket.send(json.dumps(list(prj_stories), default=json_handler))
         elif msg['name'] == 'reorder':
             prj_stories = projects.find_one({'_id': obj['project']}, {'stories': 1})['stories']
+            story_id = obj['_id']
             if not obj['_id'].startswith('S'):
-                story_id = bson.objectid.ObjectId(obj['_id'])
+                story_id = bson.objectid.ObjectId(story_id)
             index = prj_stories.index(story_id)
             prj_stories.pop(index)
             new_index = obj['position']
