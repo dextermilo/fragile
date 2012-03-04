@@ -85,6 +85,21 @@ StoryRowView = Backbone.View.extend({
 
     tagName:"div",
 
+    initialize: function() {
+        this.template = _.template(tpl.get('story-row'));
+        this.model.bind("change", this.render, this);
+        this.model.bind("destroy", this.close, this);
+
+        var self = this;
+        this.model.bind("reorder", function (position) {
+            if (position == 0) {
+                $(self.el).prependTo('.stories');
+            } else {
+                $(self.el).detach().insertAfter($('.story').eq(position - 1).parent());
+            }
+        });
+    },
+
     events: {
         'click div': 'showDetails'
     },
@@ -93,12 +108,6 @@ StoryRowView = Backbone.View.extend({
         $('div.story.selected').removeClass('selected');
         $(this.el).find('.story').addClass('selected');
         app.navigate(this.model.url(), {trigger: true});
-    },
-
-    initialize:function () {
-        this.template = _.template(tpl.get('story-row'));
-        this.model.bind("change", this.render, this);
-        this.model.bind("destroy", this.close, this);
     },
 
     render:function (eventName) {

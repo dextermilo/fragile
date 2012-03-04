@@ -58,7 +58,7 @@ def socketio_service(request):
             if cmd != 'read':
                 # Broadcast to other socket.io clients
                 print "Broadcasting", msg
-                io.broadcast_event(cmd, obj)
+                io.broadcast_event(cmd, prj_id, obj)
 
 
 def relay_to_mongo():
@@ -114,4 +114,4 @@ def relay_to_mongo():
         else:
             socket.send('OK')
 
-#Process(target=relay_to_mongo).start()
+Process(target=relay_to_mongo).start()

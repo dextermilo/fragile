@@ -48,31 +48,39 @@ socket.on('id_assigned', function(cid, id) {
     story.set('_id', id);
   }
 });
-socket.on('create', function(attrs) {
+socket.on('create', function(prj_id, attrs) {
   console.log('IN', 'create', attrs);
   // add the new model *without* syncing
-  
-  // XXX we need to pass some sort of context about
-  // where to add the item / what kind rather than
-  // just assuming it's a story
-  app.before(function() {
+  if (app.currentPrj.id == prj_id) {
     app.currentPrj.stories.add(new Story(attrs));
-  });
-});
-
-socket.on('update', function(attrs) {
-  console.log('IN', 'update', attrs);
-  var story = app.currentPrj.stories.get(attrs._id)
-  if (story != undefined) {
-    story.set(attrs);
   }
 });
 
-socket.on('delete', function(attrs) {
+socket.on('update', function(prj_id, attrs) {
+  console.log('IN', 'update', attrs);
+  if (app.currentPrj.id == prj_id) {
+    var story = app.currentPrj.stories.get(attrs._id)
+    if (story != undefined) {
+      story.set(attrs);
+    }
+  }
+});
+
+socket.on('reorder', function(prj_id, attrs) {
+  console.log('IN', 'reorder', attrs);
+  if (app.currentPrj.id == prj_id) {
+    var story = app.currentPrj.stories.get(attrs._id)
+    story.trigger('reorder', attrs.position);
+  }
+});
+
+socket.on('delete', function(prj_id, attrs) {
   console.log('IN', 'delete', attrs);
   // destroy model *without* syncing
-  var story = app.currentPrj.stories.get(attrs._id);
-  if (story != undefined) {
-    story.trigger('destroy', story, story.collection);
+  if (app.currentPrj.id == prj_id) {
+    var story = app.currentPrj.stories.get(attrs._id);
+    if (story != undefined) {
+      story.trigger('destroy', story, story.collection);
+    }
   }
 });
