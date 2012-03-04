@@ -102,9 +102,9 @@ def relay_to_mongo():
             stories.save(obj)
             socket.send('OK')
         elif msg['name'] == 'delete':
-            import pdb; pdb.set_trace()
+            story_id = obj['_id']
             if not obj['_id'].startswith('S'):
-                story_id = bson.objectid.ObjectId(obj['_id'])
+                story_id = bson.objectid.ObjectId(story_id)
             stories.remove({'_id': story_id})
             projects.update({'_id': obj['project']}, {'$pull': {'stories': story_id}})
             socket.send('OK')
