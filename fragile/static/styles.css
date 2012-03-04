@@ -89,7 +89,7 @@ button {
 .story.selected {
   background: #fff;
   margin: -2px -10px 8px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   font-size: 130%;
   z-index: 2;
   -moz-transition-property: background, margin, font-size, box-shadow;
