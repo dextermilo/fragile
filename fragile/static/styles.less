@@ -102,8 +102,12 @@ button {
 
 /* Stories */
 
-.stories {
+.story-column.full {
     margin-left: 150px;
+    position: relative;
+}
+
+.stories {
     position: relative;
 }
 
@@ -129,8 +133,8 @@ button {
 
 .story-flying {
     position: absolute;
-    width: 98%;
-    box-shadow: 0px 0px 10px rgba(44,153,172, 0.8);
+    width: 100%;
+    z-index: 10;
 }
 .story.selected {
     background: #fff;

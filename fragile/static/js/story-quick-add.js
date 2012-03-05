@@ -14,13 +14,16 @@ StoryQuickAddView = Backbone.View.extend({
             project: app.currentPrj.id,
             title: $(this.el).find('.add-story-quick-input').val()
         });
+        var flyer = new StoryFlyView();
+        var start_pos = $(this.el).find('.btn').position();
+        var story_node = $('div.stories .story-'+new_story.cid);
         if($('.story-quick-add-details:checked').length > 0) {
             $('#sidebar').html(new StoryView({model:new_story}).render().el);
+            story_node.find('.story').addClass('selected');
         }
-        var flyer = new StoryFlyView({model: new_story});
-        var start_pos = $(this.el).find('.btn').position();
         $(this.el).find('.add-story-quick-input').val('');
-        flyer.fly_in($('div.stories'), start_pos.top, start_pos.left + 100, $('div.stories').height(), 0);
+        
+        flyer.render(story_node, -start_pos.top, start_pos.left + 100, story_node.position().top, story_node.position().left);
         return false;
     },
 
@@ -35,32 +38,21 @@ StoryQuickAddView = Backbone.View.extend({
 });
 
 StoryFlyView = Backbone.View.extend({
-    tagName:'div',
-    attributes: {
-        class: 'story-flying'
-    },
 
-    fly_in:function (node, start_top, start_left, target_top, target_left) {
-        var story = $(this.render().el).css({
-            opacity: 0.9,
+    render:function (story, start_top, start_left, target_top, target_left, callback) {
+        story.addClass('story-flying');
+        story.css({
             top: start_top,
-            left: start_left,
-            'z-index': 10
+            left: start_left
         });
-        node.append(story);
         story.animate({
-            opacity: 0,
             top: target_top+'',
             left: target_left+'',
             }, 600, function() {
-            $(this).remove();
+                $(this).removeClass('story-flying');
+                if (typeof callback === 'function') callback();
         });
 
-    },
-    render:function (event) {
-        $(this.el).html(new StoryRowView({model:this.model}).render().el);
-
-        return this;
     }
 
 });

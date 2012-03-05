@@ -8,9 +8,7 @@ StoryTableView = Backbone.View.extend({
         var self = this;
         this.model.bind("add", function (model) {
             var row = $(new StoryRowView({model:model}).render().el);
-            row.hide();
             $(self.el).find('.stories').append(row);
-            row.fadeIn(1000);
         });
     },
 
@@ -86,12 +84,38 @@ StoryRowView = Backbone.View.extend({
         this.model.bind("destroy", this.close, this);
 
         var self = this;
-        this.model.bind("reorder", function (position) {
-            if (position == 0) {
-                $(self.el).prependTo('.stories');
+        this.model.bind("reorder", function (pos) {
+            var story = $(self.el);
+            var flyer = new StoryFlyView();
+            var start_pos = story.position();
+            var start_ph = $('<div class="ui-sortable-placeholder" />');
+            var target_ph = $('<div class="ui-sortable-placeholder" />');
+            var old_pos = story.index();
+            
+            if (pos==0) {
+                $(self.el).detach().prependTo($('div.stories'));
+                target_ph.prependTo($('div.stories'));
             } else {
-                $(self.el).detach().insertAfter($('.story').eq(position - 1).parent());
+                $(self.el).detach().insertAfter($('.story').eq(pos-1).parent());
+                target_ph.insertAfter($('.story').eq(pos-1).parent());
             }
+            
+
+            flyer.render(story, start_pos.top, start_pos.left, $(self.el).position().top, $(self.el).position().left, function() {
+                target_ph.remove();
+                start_ph.remove();
+            });
+
+            start_ph.insertAfter($('.story').eq(old_pos).parent());
+            start_ph.height(story.height());
+            start_ph.slideUp(600);
+            target_ph.insertAfter($('.story').eq(pos-1).parent());
+            target_ph.height(1);
+            target_ph.animate({
+                height: story.height()+''
+            }, 600);
+            
+            
         });
     },
 
@@ -107,6 +131,7 @@ StoryRowView = Backbone.View.extend({
 
     render:function (eventName) {
         $(this.el).html(this.template(this.model.toJSON()));
+        $(this.el).addClass('story-'+this.model.cid);
         $(this.el).find('.story-state').html(new StateSelectorView({model: this.model}).render().el);
         this.el.model = this.model;
         return this;
