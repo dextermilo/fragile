@@ -8,10 +8,9 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
     'gevent',
-    'gevent-websocket',
-    'gevent-socketio',
+    'gevent-websocket>=0.3.1',
+    'gevent-socketio>=0.2.2',
     'pyramid',
-    'pyramid-socketio',
     'gevent_zeromq',
     'pymongo',
     ]

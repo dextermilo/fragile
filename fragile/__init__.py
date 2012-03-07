@@ -16,12 +16,6 @@ def make_wsgi_app(global_config, **settings):
 
 def main():
 	app = make_wsgi_app({})
-	def app_wrapper(environ, start_response):
-		# work around gevent-websocket bug
-		if start_response is None:
-			return
-		return app(environ, start_response)
-
-	server = SocketIOServer(('0.0.0.0', 6543), app_wrapper, namespace='socket.io', policy_server=False)
+	server = SocketIOServer(('0.0.0.0', 6543), app, namespace='socket.io', policy_server=False)
 	print 'HTTP Listening on port 6543'
 	server.serve_forever()

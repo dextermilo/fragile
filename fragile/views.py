@@ -1,3 +1,4 @@
+from pyramid.response import Response
 from pyramid.view import view_config
 from gevent_zeromq import zmq
 import bson
@@ -34,31 +35,34 @@ def socketio_service(request):
     socket = context.socket(zmq.REQ)
     socket.connect("tcp://127.0.0.1:5555")
 
-    while True:
-        msg = io.receive()
-        if msg is None:
-            break
-        if msg['type'] == 'event':
-            cmd = msg['name']
-            prj_id, obj = msg['args']
+    if io.session is not None:
+        while True:
+            msg = io.receive()
+            if msg is None:
+                break
+            if msg['type'] == 'event':
+                cmd = msg['name']
+                prj_id, obj = msg['args']
 
-            # Relay to db process via zmq
-            # XXX we could PUSH updates/deletes and reserve
-            # the REQ-REP for creating objects (where we need the id)
-            socket.send(json.dumps(msg))
-            resp = socket.recv()
+                # Relay to db process via zmq
+                # XXX we could PUSH updates/deletes and reserve
+                # the REQ-REP for creating objects (where we need the id)
+                socket.send(json.dumps(msg))
+                resp = socket.recv()
 
-            if cmd == 'create':
-                # Notify creator of actual id
-                io.send_event('id_assigned', obj['cid'], resp)
-            elif cmd == 'read':
-                # Relay story data
-                io.send_event('reset', prj_id, resp)
+                if cmd == 'create':
+                    # Notify creator of actual id
+                    io.send_event('id_assigned', obj['cid'], resp)
+                elif cmd == 'read':
+                    # Relay story data
+                    io.send_event('reset', prj_id, resp)
 
-            if cmd != 'read':
-                # Broadcast to other socket.io clients
-                print "Broadcasting", msg
-                io.broadcast_event(cmd, prj_id, obj)
+                if cmd != 'read':
+                    # Broadcast to other socket.io clients
+                    print "Broadcasting", msg
+                    io.broadcast_event(cmd, prj_id, obj)
+
+    return Response()
 
 
 def relay_to_mongo():
