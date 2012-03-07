@@ -1,12 +1,33 @@
-<div class="story state-<% print(blocked == true ? 'blocked' : state) %>">
+<div class="story clearfix state-<% print(blocked == true ? 'blocked' : state) %>">
 
-	<div class="story-detail">
-		<span class="story-state"></span>
-		<span class="story-owner"><%= owner %></span>
-	</div>
+	
+	<span class="story-state"></span>
 	<div class="story-summary"><%= title %></div>
 	<div class="story-nums">
 		<div class="story-points"><%= points %></div>
+	</div>
+	<div class="story-footer">
+		<ul class="nav">
+			<li class="dropdown story-owner">
+				<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+					<% print(owner ? owner : 'unassigned');  %>
+					<b class="caret"></b>
+				</a>
+				<% if (app.users.length > 0) { %>
+					<ul class="dropdown-menu filter-menu">
+						<% _.each(app.users, function (value) { %>
+							<li>
+								<a class="story-owner-user" href="#" data-user="<%= value %>">
+									<%= value %>
+								</a>
+							</li>
+						<% }); %>
+					</ul>
+				<% } %>
+
+			</li>
+		</ul>
+
 	</div>
 
 </div>

@@ -1,6 +1,6 @@
 <a href="#" class="dropdown-toggle story-active-state <% print('sel-' + (blocked == true ? 'blocked' : state)) %>" data-toggle="dropdown">
 	<span class="sel-state-color"></span>
-	<%= states[state] %>
+	<% print(blocked == true ? 'blocked' : states[state]); %>
 </a>
 
 <ul class="dropdown-menu">

@@ -24,6 +24,12 @@ var AppRouter = Backbone.Router.extend({
         "accepted": "Approved"
     },
 
+    // Temporary list of "users"
+    users: [
+        "David",
+        "Ryan"
+    ],
+    
     projectList:function () {
         if (!this.projects) {
             this.projects = new ProjectCollection();
