@@ -120,7 +120,17 @@ StoryRowView = Backbone.View.extend({
     },
 
     events: {
-        'click div': 'showDetails'
+        'click div': 'showDetails',
+        'click .story-owner-user': 'select_owner'
+    },
+
+    select_owner: function (event) {
+        var user;
+
+        user = $(event.target).attr('data-user');
+
+        this.model.set("owner", user);
+        this.model.save();
     },
 
     showDetails: function() {

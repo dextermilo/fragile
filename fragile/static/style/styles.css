@@ -234,6 +234,7 @@ button {
 }
 .story-footer .nav {
   margin-bottom: 0;
+  float: left;
 }
 .story-footer .nav a {
   padding: 2px 3px;
