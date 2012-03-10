@@ -6,10 +6,10 @@ import bson.json_util
 import json
 import pymongo
 from multiprocessing import Process
+from .db import mongo_connection
 
 
 context = zmq.Context()
-mongo = pymongo.Connection()
 
 
 def json_handler(obj):
@@ -18,13 +18,11 @@ def json_handler(obj):
     raise TypeError("%r is not JSON serializable" % obj)
 
 
-@view_config(renderer='templates/index.pt')
-def index(request):
-    try:
-        cursor = mongo.fragile.projects.find();
+@view_config(route_name='home', renderer='templates/index.pt', permission='view')
+def home(request):
+    with mongo_connection() as mongo:
+        cursor = mongo.projects.find();
         return {'projectdata': json.dumps(list(cursor), default=json_handler).replace("'", r"\'").replace(r'\"', r'\\"') }
-    finally:
-        mongo.end_request()
 
 
 @view_config(route_name='socket_io')
@@ -79,16 +77,21 @@ def relay_to_mongo():
     projects = conn.fragile.projects
     stories = conn.fragile.stories
     counters = conn.fragile.counters
+    users = conn.fragile.users
 
     # DB upgrade: add 'fragile' project if missing
-    if not len(list(projects.find())):
+    if not projects.count():
         stories.update({}, {'$set': {'project': 'fragile'}})
         story_ids = [s['_id'] for s in stories.find({'project': 'fragile'})]
         projects.insert({'_id': 'fragile', 'title': 'Fragile', 'stories': story_ids})
 
     # DB upgrade: add incrementing counter for stories
-    if not len(list(counters.find())):
+    if not counters.count():
         counters.insert({'_id': 'story', 'value': 0})
+
+    # DB upgrade: add an admin user
+    if not users.count():
+        users.insert({'login': 'admin', 'password': '12345'})
 
     while True:
         msg = json.loads(socket.recv())

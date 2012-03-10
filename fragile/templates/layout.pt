@@ -1,0 +1,55 @@
+<tal:layout metal:define-macro="layout">
+<!DOCTYPE html>
+<html xml:lang="en">
+<head>
+  <title>Fragile</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script src="static/js/socket.io.js"></script>
+  <script src="http://documentcloud.github.com/underscore/underscore.js"></script>
+  <script src="http://documentcloud.github.com/backbone/backbone.js"></script>
+  <script src="static/js/bootstrap/bootstrap-dropdown.js"></script>
+  <script src="static/js/jquery-ui-1.8.18.custom.min.js"></script>
+  <link rel="stylesheet" href="/static/style/bootstrap-mix.css" />
+  <link rel="stylesheet" href="/static/style/bootstrap-responsive-mix.css" />
+  <link rel="stylesheet" href="/static/style/styles.css" />
+</head>
+<body>
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="brand" href="#">
+          Fragile
+        </a>
+        <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Projects</a></li>
+              <li><a href="#">Sprint</a></li>
+              <li><a href="#">Performance</a></li>
+            </ul>
+        </div>
+        <ul class="nav pull-right">
+          <tal:loggedin tal:condition="logged_in">
+            <li><a href="#">${logged_in}</a></li>
+            <li><a href="/logout">Log out</a></li>
+          </tal:loggedin>
+          <li tal:condition="not logged_in">
+            <a href="/login">Log in</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <tal:main metal:define-slot="main">
+    <div id="wrapper">
+      <div id="sidebar"></div>
+      <div id="content">
+        <tal:content metal:define-slot="content" />
+      </div>
+    </div>
+  </tal:main>
+</body>
+</html>
+</tal:layout>

@@ -10,7 +10,7 @@ requires = [
     'gevent',
     'gevent-websocket>=0.3.1',
     'gevent-socketio>=0.2.2',
-    'pyramid',
+    'pyramid>=1.3a9',
     'gevent_zeromq',
     'pymongo',
     ]

@@ -1,38 +1,8 @@
-<!DOCTYPE html>
-<html xml:lang="en">
-<head>
-  <title>Fragile</title>
-  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
-
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-  <script src="static/js/socket.io.js"></script>
-  <script src="http://documentcloud.github.com/underscore/underscore.js"></script>
-  <script src="http://documentcloud.github.com/backbone/backbone.js"></script>
-  <script src="static/js/bootstrap/bootstrap-dropdown.js"></script>
-  <script src="static/js/jquery-ui-1.8.18.custom.min.js"></script>
-  <link rel="stylesheet" href="/static/style/bootstrap-mix.css" />
-  <link rel="stylesheet" href="/static/style/bootstrap-responsive-mix.css" />
-  <link rel="stylesheet" href="/static/style/styles.css" />
-</head>
-<body>
-  <div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-      <div class="container">
-        <a class="brand" href="#">
-          Fragile
-        </a>
-          <div class="nav-collapse">
-              <ul class="nav">
-                <li class="active"><a href="#">Projects</a></li>
-                <li><a href="#">Sprint</a></li>
-                <li><a href="#">Performance</a></li>
-              </ul>
-          </div>
-      </div>
-    </div>
-  </div>
+<tal:layout metal:use-macro="layout">
+ <tal:main metal:fill-slot="main">
   <div id="wrapper">
     <div id="sidebar"></div>
+    <tal:content metal:define-slot="content" />
     <div id="content"></div>
   </div>
 
@@ -46,5 +16,5 @@
   <script src="static/js/story-table.js"></script>
   <script src="static/js/story-quick-add.js"></script>
   <script src="static/js/main.js"></script>
-</body>
-</html>
+ </tal:main>
+</tal:layout>
