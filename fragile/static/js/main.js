@@ -10,9 +10,8 @@ Backbone.View.prototype.close = function () {
 var AppRouter = Backbone.Router.extend({
 
     routes:{
-        "": "projectList",
-        ":prj": "projectDetails",
-        ":prj/:story": "storyDetails"
+        "": "projectDetails",
+        ":story": "storyDetails"
     },
 
     states: {
@@ -30,40 +29,30 @@ var AppRouter = Backbone.Router.extend({
         "Ryan"
     ],
     
-    projectList:function () {
-        if (!this.projects) {
-            this.projects = new ProjectCollection();
-            this.projects.reset(projectdata);
-            $('#content').html(new ProjectListView({model:app.projects}).render().el);
-        }
-    },
-
-    projectDetails: function(prj_id, callback) {
-        this.projectList();
-
-        if (this.currentPrj != undefined && this.currentPrj.id == prj_id) {
+    projectDetails: function(callback) {
+        if (this.currentPrj != undefined) {
             if (callback != undefined) {
                 callback();
                 return;
             }
         }
 
-        var prj = this.currentPrj = app.projects.get(prj_id);
+        var prj = this.currentPrj = new Project(initial.project);
         prj.stories = new StoryCollection();
         prj.stories.context = prj;
         var prj_view = new ProjectDetailsView({model:prj});
         this.showView('#content', prj_view);
-        prj.stories.fetch({success:function () {
-            $(prj_view.el).append(new StoryTableView({model:prj.stories}).render().el);
-            if (callback != undefined) {
-                callback();
-            }
-        }});
+
+        prj.stories.reset(initial.stories);
+        $(prj_view.el).append(new StoryTableView({model:prj.stories}).render().el);
+        if (callback != undefined) {
+            callback();
+        }
 
     },
 
-    storyDetails:function (prj_id, story_id) {
-        this.projectDetails(prj_id, function() {
+    storyDetails:function (story_id) {
+        this.projectDetails(function() {
             if (story_id == 'new') {
                 var story = app.currentPrj.stories.create({project: app.currentPrj.id});
             } else {

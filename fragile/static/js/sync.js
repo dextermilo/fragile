@@ -37,14 +37,6 @@ socket.on('disconnect', function() {
 
 // handle events relayed from other clients
 
-socket.on('reset', function(prj_id, storydata) {
-  console.log('IN', 'reset', prj_id, storydata);
-  var prj = app.projects.get(prj_id);
-  if (prj.stories.reset_callback != undefined) {
-    prj.stories.reset_callback($.parseJSON(storydata));
-    delete prj.stories.reset_callback;
-  }
-});
 socket.on('id_assigned', function(cid, id) {
   console.log('IN', 'id_assigned', cid, id);
   var story = app.currentPrj.stories.getByCid(cid)

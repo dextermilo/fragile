@@ -23,7 +23,7 @@ def login(request):
         with mongo_connection() as mongo:
             user = mongo.users.find_one({'login': login, 'password': password})
             if user is not None:
-                headers = remember(request, login)
+                headers = remember(request, str(user['_id']))
                 return HTTPFound(location = came_from,
                                  headers = headers)
         message = 'Failed login'
@@ -39,5 +39,5 @@ def login(request):
 @view_config(route_name='logout')
 def logout(request):
     headers = forget(request)
-    return HTTPFound(location = request.route_url('home'),
+    return HTTPFound(location = request.route_url('login'),
                      headers = headers)

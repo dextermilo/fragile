@@ -1,12 +1,6 @@
 <tal:layout metal:use-macro="layout">
- <tal:main metal:fill-slot="main">
-  <div id="wrapper">
-    <div id="sidebar"></div>
-    <tal:content metal:define-slot="content" />
-    <div id="content"></div>
-  </div>
-
-  <script>var projectdata=$.parseJSON('${projectdata}');</script>
+ <tal:main metal:fill-slot="content">
+  <script>var initial=$.parseJSON('${initial}');</script>
   <script src="static/js/utils.js"></script>
   <script src="static/js/sync.js"></script>
   <script src="static/js/models.js"></script>

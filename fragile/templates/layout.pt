@@ -19,12 +19,12 @@
   <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
       <div class="container">
-        <a class="brand" href="#">
+        <a class="brand" href="/">
           Fragile
         </a>
         <div class="nav-collapse">
             <ul class="nav">
-              <li class="active"><a href="#">Projects</a></li>
+              <li class="active"><a href="/">Projects</a></li>
               <li><a href="#">Sprint</a></li>
               <li><a href="#">Performance</a></li>
             </ul>

@@ -1,0 +1,12 @@
+<tal:layout metal:use-macro="layout">
+ <tal:content metal:fill-slot="content">
+
+  <h2>My Projects</h2>
+  <ul>
+    <li tal:repeat="project projects">
+      <a href="/${project._id}">${project.title}</a>
+    </li>
+  </ul>
+
+ </tal:content>
+</tal:layout>

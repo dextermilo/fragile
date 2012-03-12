@@ -6,7 +6,7 @@ import bson.json_util
 import json
 import pymongo
 from multiprocessing import Process
-from .db import mongo_connection
+from .resources import Root, Project
 
 
 context = zmq.Context()
@@ -18,14 +18,25 @@ def json_handler(obj):
     raise TypeError("%r is not JSON serializable" % obj)
 
 
-@view_config(route_name='home', renderer='templates/index.pt', permission='view')
+@view_config(context=Root, renderer='templates/home.pt')
 def home(request):
-    with mongo_connection() as mongo:
-        cursor = mongo.projects.find();
-        return {'projectdata': json.dumps(list(cursor), default=json_handler).replace("'", r"\'").replace(r'\"', r'\\"') }
+    projects = request.db.projects.find({
+        'admins': request.user['_id']
+        })
+    return {'projects': projects}
 
 
-@view_config(route_name='socket_io')
+@view_config(context=Project, renderer='templates/project.pt', permission='edit')
+def project_view(request):
+    project = request.context.attrs
+    initial = {
+        'project': project,
+        'stories': list(request.db.stories.find({'project': project['_id'] })),
+        }
+    return {'initial': json.dumps(initial, default=json_handler).replace("'", r"\'").replace(r'\"', r'\\"') }
+
+
+@view_config(route_name='socket_io', permission='edit')
 def socketio_service(request):
     print "Socket.IO request running"
     io = request.environ['socketio']
@@ -51,9 +62,6 @@ def socketio_service(request):
                 if cmd == 'create':
                     # Notify creator of actual id
                     io.send_event('id_assigned', obj['cid'], resp)
-                elif cmd == 'read':
-                    # Relay story data
-                    io.send_event('reset', prj_id, resp)
 
                 if cmd != 'read':
                     # Broadcast to other socket.io clients
@@ -115,9 +123,6 @@ def relay_to_mongo():
             stories.remove({'_id': story_id})
             projects.update({'_id': obj['project']}, {'$pull': {'stories': story_id}})
             socket.send('OK')
-        elif msg['name'] == 'read':
-            prj_stories = stories.find({'project': prj_id})
-            socket.send(json.dumps(list(prj_stories), default=json_handler))
         elif msg['name'] == 'reorder':
             prj_stories = projects.find_one({'_id': obj['project']}, {'stories': 1})['stories']
             story_id = obj['_id']

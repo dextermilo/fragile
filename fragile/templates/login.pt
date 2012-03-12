@@ -1,12 +1,19 @@
 <tal:page metal:use-macro="layout">
  <tal:content metal:fill-slot="content">
-  ${message}
-  <form action="${url}" method="post">
-    <input type="hidden" name="came_from" value="${came_from}"/>
-    <input type="text" name="login" value="${login}"/><br/>
-    <input type="password" name="password"
-           value="${password}"/><br/>
-    <input type="submit" name="form.submitted" value="Log In"/>
-  </form>
+
+  <tal:block tal:condition="logged_in">
+  	You don't have access.
+  </tal:block>
+
+  <tal:block tal:condition="not logged_in">
+	  ${message}
+	  <form action="${url}" method="post">
+	    <input type="hidden" name="came_from" value="${came_from}"/>
+	    <input type="text" name="login" value="${login}"/><br/>
+	    <input type="password" name="password"
+	           value="${password}"/><br/>
+	    <input type="submit" name="form.submitted" value="Log In"/>
+	  </form>
+	  </tal:block>
  </tal:content>
 </tal:page>
